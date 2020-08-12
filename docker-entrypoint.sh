@@ -38,4 +38,11 @@ else
   echo "[INFO] Replication set already initiated."
 fi
 
+echo "[INFO] Compacting oplog."
+mongo --quiet > /dev/null <<EOF
+use local
+db.runCommand({ "compact" : "oplog.rs", "force" : true } )
+EOF
+echo "[INFO] Done."
+
 wait
