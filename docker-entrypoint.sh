@@ -2,6 +2,9 @@
 
 # Adapted from https://github.com/docker-library/mongo/issues/339#issuecomment-557606066
 
+# Set oplog size to the minimum
+set -- "$@" --oplogSize 990
+
 # call default entrypoint
 /usr/local/bin/docker-entrypoint.sh "$@" &
 
