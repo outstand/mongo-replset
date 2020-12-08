@@ -21,9 +21,21 @@ done
 # wait for mongod to be ready for connections
 sleep 3
 
+COUNTER=0
+until mongo --quiet --eval "db.serverStatus()" > /dev/null 2>&1 ; do
+  sleep 1
+  COUNTER=$((COUNTER+1))
+  if [[ ${COUNTER} -eq 30 ]]; then
+    echo "MongoDB did not initialize within 30 seconds, exiting"
+    exit 2
+  fi
+  echo "Waiting for MongoDB to initialize... ${COUNTER}/30"
+done
+echo "Done waiting for MongoDB to initialize!"
+
 # check if replica set is already initiated
 RS_STATUS=$( mongo --quiet --eval "rs.status().ok" )
-if [[ $RS_STATUS -ne 1 ]]
+if [[ "$RS_STATUS" != "1" ]]
 then
   echo "[INFO] Replication set config invalid. Reconfiguring now."
   RS_CONFIG_STATUS=$( mongo --quiet --eval "rs.status().codeName" )
