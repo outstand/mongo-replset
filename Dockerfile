@@ -1,5 +1,5 @@
 FROM outstand/tini as tini
-FROM mongo:4.2.10
+FROM mongo:4.4.18
 
 COPY --from=tini /sbin/tini /sbin/
 
